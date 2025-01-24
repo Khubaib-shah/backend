@@ -1,5 +1,6 @@
 import express from "express";
 import Bundle from "../models/Bundle.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -25,6 +26,41 @@ router.get("/", async (req, res) => {
     res
       .status(500)
       .json({ error: "Failed to fetch bundles", details: error.message });
+  }
+});
+// Update bundle
+router.put("/", async (req, res) => {
+  const { _id, supplier, cost, status } = req.body;
+
+  // Validate _id
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(400).json({
+      message: `Invalid ID: ${_id}`,
+    });
+  }
+
+  try {
+    // Update the bundle
+    const updatedBundle = await Bundle.findByIdAndUpdate(
+      _id,
+      { supplier, cost, status },
+      { new: true, runValidators: true }
+    );
+
+    // If no bundle is found
+    if (!updatedBundle) {
+      return res.status(404).json({
+        message: `No bundle found with id: ${_id}`,
+      });
+    }
+
+    // Return the updated bundle
+    res.status(200).json(updatedBundle);
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to update bundle",
+      details: error.message,
+    });
   }
 });
 
