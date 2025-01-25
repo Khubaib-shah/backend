@@ -14,6 +14,12 @@ app.use(cors());
 
 // routes
 app.use("/api/auth", authRoute);
+app.use("/", (req, res) => {
+  req.status(200).json({
+    message: "api is ok",
+  });
+  console.log("server is running");
+});
 
 // server
 const PORT = process.env.PORT || 3001;
