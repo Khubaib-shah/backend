@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import dbConnect from "./config/dbConnect.js";
-import authRoute from "./routes/auhtRoutes.js";
-import userRoute from "./routes/userRoutes.js";
+import dbConnect from "./src/config/dbConnect.js";
+import authRoute from "./src/routes/auhtRoutes.js";
+import userRoute from "./src/routes/userRoutes.js";
 
 const app = express();
 dotenv.config();
