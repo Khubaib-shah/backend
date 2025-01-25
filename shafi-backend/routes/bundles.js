@@ -28,6 +28,29 @@ router.get("/", async (req, res) => {
       .json({ error: "Failed to fetch bundles", details: error.message });
   }
 });
+
+// Get Single Bundle
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: `Invalid ID format: ${id}` });
+    }
+    const bundle = await Bundle.findById(id);
+
+    if (!bundle) {
+      return res.status(404).json({ error: `No bundle found with ID: ${id}` });
+    }
+
+    res.status(200).json(bundle);
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to fetch bundle",
+      details: error.message,
+    });
+  }
+});
+
 // Update bundle
 router.put("/", async (req, res) => {
   const { _id, supplier, cost, status } = req.body;
@@ -64,25 +87,25 @@ router.put("/", async (req, res) => {
   }
 });
 
-// Delete bundle
-router.delete("/", async (req, res) => {
-  const { _id } = req.body;
+// Delete bundle by ID
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
 
-  // Validate _id
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
+  // Validate id
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: `Invalid ID: ${_id}`,
+      message: `Invalid ID: ${id}`,
     });
   }
 
   try {
-    // Delete the bundle
-    const deletedBundle = await Bundle.findByIdAndDelete(_id);
+    // Delete the bundle by id
+    const deletedBundle = await Bundle.findByIdAndDelete(id);
 
     // If no bundle is found
     if (!deletedBundle) {
       return res.status(404).json({
-        message: `No bundle found with id: ${_id}`,
+        message: `No bundle found with id: ${id}`,
       });
     }
 
@@ -100,7 +123,7 @@ router.delete("/", async (req, res) => {
 });
 
 // Generate report
-router.get("/report", async (req, res) => {
+router.get("/report/repo", async (req, res) => {
   try {
     const bundles = await Bundle.find();
     const totalBundles = bundles.length;

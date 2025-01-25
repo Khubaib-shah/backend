@@ -17,7 +17,11 @@ const bundleSchema = new mongoose.Schema({
     enum: ["Received", "In_Production", "Ready_For_Sale", "Sold", "Returned"],
     default: "Received",
   },
-  receivedAt: { type: Date },
+  receivedAt: {
+    type: Date,
+
+    default: Date.now,
+  },
 });
 
 const Bundle = mongoose.model("Bundle", bundleSchema);
