@@ -14,8 +14,8 @@ const bundleSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["received", "sale", "pending"],
-    default: "pending",
+    enum: ["Received", "In_Production", "Ready_For_Sale", "Sold", "Returned"],
+    default: "Received",
   },
   receivedAt: { type: Date },
 });

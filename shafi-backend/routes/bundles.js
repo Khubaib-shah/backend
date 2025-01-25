@@ -43,7 +43,7 @@ router.put("/", async (req, res) => {
     // Update the bundle
     const updatedBundle = await Bundle.findByIdAndUpdate(
       _id,
-      { supplier, cost, status },
+      { supplier, cost, status, receivedAt },
       { new: true, runValidators: true }
     );
 
@@ -59,6 +59,41 @@ router.put("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: "Failed to update bundle",
+      details: error.message,
+    });
+  }
+});
+
+// Delete bundle
+router.delete("/", async (req, res) => {
+  const { _id } = req.body;
+
+  // Validate _id
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(400).json({
+      message: `Invalid ID: ${_id}`,
+    });
+  }
+
+  try {
+    // Delete the bundle
+    const deletedBundle = await Bundle.findByIdAndDelete(_id);
+
+    // If no bundle is found
+    if (!deletedBundle) {
+      return res.status(404).json({
+        message: `No bundle found with id: ${_id}`,
+      });
+    }
+
+    // Return success message with 200 status
+    res.status(200).json({
+      message: "Bundle deleted successfully",
+      bundle: deletedBundle,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to delete bundle",
       details: error.message,
     });
   }
