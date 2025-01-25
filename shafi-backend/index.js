@@ -19,6 +19,6 @@ app.use(bodyParser.json());
 app.use("/api/bundles", bundleRoutes);
 
 // Start Server
-// process.env.PORT ||
-const PORT = 5000;
+//
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
